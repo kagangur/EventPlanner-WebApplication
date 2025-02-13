@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block body %}
+<link rel="stylesheet" href="{% static 'profile/style.css' %}">
+
+<div class="container" style="margin-top: 100px; margin-bottom: 100px;">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="card">
+        <div class="card-header">
+            <h4>Profil Bilgilerini Değiştir</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{% url 'change_profile' %}">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="ad">Ad</label>
+                    <input type="text" id="ad" name="ad" class="form-control" value="{{ ad }}">
+                </div>
+                <div class="form-group">
+                    <label for="soyad">Soyad</label>
+                    <input type="text" id="soyad" name="soyad" class="form-control" value="{{ soyad }}">
+                </div>
+                <div class="form-group">
+                    <label for="e_posta">E-posta</label>
+                    <input type="email" id="e_posta" name="e_posta" class="form-control" value="{{ e_posta }}">
+                </div>
+                <div class="form-group">
+                    <label for="konum">Konum</label>
+                    <input type="text" id="konum" name="konum" class="form-control" value="{{ konum }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="cinsiyet">Cinsiyet</label>
+                    <select id="cinsiyet" name="cinsiyet" class="form-control">
+                        <option value="Erkek" {% if cinsiyet == 'Erkek' %}selected{% endif %}>Erkek</option>
+                        <option value="Kadın" {% if cinsiyet == 'Kadın' %}selected{% endif %}>Kadın</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="foto_url">Profil Fotoğrafı URL</label>
+                    <input type="text" id="foto_url" name="foto_url" class="form-control" value="{{ foto_url }}">
+                </div>
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="/profile" class="button-47">Geri Dön</a>
+                    <button type="submit" class="button-47">Değişiklikleri Kaydet</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

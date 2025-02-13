@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container">
+    <h3>Rota Planlama: {{ event_name }}</h3>
+
+    <form method="get" action="{% url 'route_planner' id=id %}">
+        <div class="form-group">
+            <label for="start_location">Başlangıç Konumu:</label>
+            <input type="text" id="start_location" name="start_location" value="{{ start_location }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="transport_mode">Ulaşım Yöntemi:</label>
+            <select id="transport_mode" name="transport_mode" class="form-control">
+                <option value="" {% if transport_mode == "" %}selected{% endif %}>Seçiniz</option>
+                <option value="DRIVING" {% if transport_mode == "DRIVING" %}selected{% endif %}>Araçla</option>
+                <option value="WALKING" {% if transport_mode == "WALKING" %}selected{% endif %}>Yürüyerek</option>
+                <option value="BICYCLING" {% if transport_mode == "BICYCLING" %}selected{% endif %}>Bisikletle</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Rota Hesapla</button>
+    </form>
+
+    {% if start_location %}
+    <div id="map" style="height: 500px; margin-top: 20px;"></div>
+    {% endif %}
+</div>
+
+<script>
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 14,
+            center: { lat: 39.9334, lng: 32.8597 }, // Varsayılan merkez (Ankara)
+        });
+
+        const geocoder = new google.maps.Geocoder();
+        const directionsService = new google.maps.DirectionsService();
+        const directionsRenderer = new google.maps.DirectionsRenderer();
+
+        directionsRenderer.setMap(map);
+
+        {% if start_location and event_location %}
+        geocoder.geocode({ address: "{{ start_location }}" }, function(results, status) {
+            if (status === "OK") {
+                const start = results[0].geometry.location;
+
+                geocoder.geocode({ address: "{{ event_location }}" }, function(results2, status2) {
+                    if (status2 === "OK") {
+                        const end = results2[0].geometry.location;
+
+                        // Kullanıcının seçtiği ulaşım modunu al
+                        const travelMode = "{{ transport_mode|default:'' }}";  // Boş olabilir
+
+                        if (travelMode) {
+                            const request = {
+                                origin: start,
+                                destination: end,
+                                travelMode: google.maps.TravelMode[travelMode],
+                                // Alternatif rotaları kaldırıp, sadece bir rota isteği gönderiyoruz
+                            };
+
+                            directionsService.route(request, function(response, status) {
+                                if (status === "OK") {
+                                    directionsRenderer.setDirections(response);
+                                } else {
+                                    alert("Rota bulunamadı: " + status);
+                                    console.error("Hata: " + status); // Hata detaylarını konsola yazdır
+                                }
+                            });
+                        } else {
+                            alert("Lütfen bir ulaşım yöntemi seçin.");
+                        }
+                    } else {
+                        alert("Etkinlik konumu bulunamadı: " + status2);
+                    }
+                });
+            } else {
+                alert("Başlangıç konumu bulunamadı: " + status);
+            }
+        });
+        {% endif %}
+    }
+</script>
+
+
+<script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLDWU7TJfLfTujSZ6bdkTPb9hmcfiRQJg&callback=initMap">
+
+</script>
+{% endblock %}

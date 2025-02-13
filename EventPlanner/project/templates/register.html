@@ -1,0 +1,12 @@
+{% extends "layoutwithoutnavbar.html" %}
+
+{% block body %}
+<div class="container" style="margin-top: 50px;">
+    <h2>Kayıt Ol</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Register</button>
+  </form>
+</div>
+{% endblock %}

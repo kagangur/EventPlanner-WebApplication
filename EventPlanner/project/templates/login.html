@@ -1,0 +1,25 @@
+{% extends "layoutwithoutnavbar.html" %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h3>Giriş Yap</h3>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">Kullanıcı Adı:</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label for="id_password">Şifre:</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="btn btn-success">Giriş Yap</button>
+            <a href="{% url 'register' %}" class="btn btn-secondary ml-2">Kayıt Ol</a>
+            <a href="{% url 'forgot_password' %}" class="btn btn-primary">Şifremi Unuttum</a>
+
+        </form>
+    </div>
+</div>
+{% endblock body %}

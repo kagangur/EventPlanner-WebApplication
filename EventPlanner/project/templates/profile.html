@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block body %}
+<link rel="stylesheet" href="{% static 'profile/style.css' %}">
+
+<div class="container" style="margin-top: 100px; margin-bottom: 100px;">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="card">
+        <div class="card-header">
+            <h4>Profil Bilgileri</h4>
+        </div>
+        <div class="card-body d-flex">
+            <!-- Left Side: Profile Photo and Upload Button -->
+            <div class="text-center" style="flex: 1;">
+                <h5>Profil Fotoğrafı</h5>
+                {% if profile_photo_url %}
+                    <img src="{{ profile_photo_url }}" alt="Profile Photo"
+                         style="width: 150px; height: 150px; border-radius: 50%; margin-bottom: 15px;">
+                {% else %}
+                    <p>Henüz bir profil fotoğrafı yüklenmedi.</p>
+                {% endif %}
+
+            </div>
+
+            <div class="text-center" style="flex: 1;">
+                <h5>Unvanınız</h5>
+                <div class="badge badge-light" style="padding: 20px; font-size: 18px; border-radius: 50%;">
+<!-- Rozet Resmi -->
+<img src="{% static 'images/' %}{{ rozet|lower }}.png" alt="{{ rozet }} Badge" style="width: 50px; height: 50px; border-radius: 50%;">
+                </div>
+                <h5 class="mt-3">{{ rozet }}</h5>
+
+            </div>
+        </div>
+
+            {% csrf_token %}
+            <h5>Profil Bilgileri</h5>
+
+
+
+
+
+
+            <div class="mt-4">
+                <p><strong>Kullanıcı Adı:</strong> {{ user.username }}</p>
+
+                <p><strong>Ad:</strong> {{ ad }}</p>
+                <p><strong>Soyad:</strong> {{ soyad }}</p>
+                <p><strong>E-posta:</strong> {{ e_posta }}</p>
+                <p><strong>Konum:</strong> {{ konum }}</p>
+                <p><strong>Doğum Tarihi:</strong> {% if dogum_tarihi %}{{ dogum_tarihi|date:"d M Y" }}{% else %}Belirtilmedi{% endif %}</p>
+                <p><strong>Cinsiyet:</strong> {% if cinsiyet %}{{ cinsiyet }}{% else %}Belirtilmedi{% endif %}</p>
+            </div>
+            <!-- Interest Selection with Checkboxes for Multiple Interests -->
+            <div class="mt-4">
+                <h5>İlgi Alanı:</h5>
+                {% if interest %}
+                <p>{{ interest }}</p>
+            {% else %}
+                <p>Henüz bir ilgi alanı belirlenmedi.</p>
+            {% endif %}
+
+            <div class="mt-4 d-flex justify-content-end" >
+                <a class="button-47" href="/changeprofile" role="button">Profil Bilgilerini Değiştir</a>
+
+            </div>
+
+            </div>
+
+
+
+
+{% endblock %}

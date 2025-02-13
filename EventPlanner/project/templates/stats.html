@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>İstatistikler</h2>
+    <hr>
+    
+    <!-- İstatistikler Kartları -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Katıldığın Etkinlik Sayısı</h5>
+                    <p class="card-text">{{ total_events }} etkinlik</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Toplam Puan</h5>
+                    <p class="card-text">{{ total_points }} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grafik -->
+    <div class="mt-5">
+        <h4>Organize Ettiğin Etkinliklere Katılan Kişi Sayısı</h4>
+        <div class="chart-container">
+            <canvas id="participationChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('participationChart').getContext('2d');
+    var participationChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ event_names|safe }},
+            datasets: [{
+                label: 'Katılımcı Sayısı',
+                data: {{ participants_count|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 10  // Y eksenindeki değerler 10'luk aralıklarla gösterilecek
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock body %}

@@ -1,0 +1,65 @@
+
+
+
+<nav class="navbar navbar-toggleable-md navbar-expand-lg fixed-top bg-light navbar-light">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="/">
+      <img id="MDB-logo" src="https://framerusercontent.com/images/NBZqp4vdZ9yMqGqdjznVMjSzrc.png"
+          alt="MDB Logo" draggable="false" height="60" />
+  </a>    
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav align-items-center mx-auto">
+        <!-- Dropdown Menü (Profil) -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle mx-2" id="profileDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png" alt="Profil Logo" style="height: 30px;" class="pe-2" />
+            </a>
+            <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                <a class="dropdown-item" href="/profile">Profilim</a>
+                <a class="dropdown-item" href="/stats">İstatistikler</a>
+                <a class="dropdown-item" href="/logout">Çıkış Yap</a>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link mx-2 position-relative" href="/notifications">
+                <img src="https://static-00.iconduck.com/assets.00/notification-icon-1842x2048-xr57og4y.png" 
+                     alt="Bildirimler" 
+                     style="height: 30px;" 
+                     class="pe-2" />
+                {% if unread_notification_count > 0 %}
+                <span class="badge badge-danger position-absolute" style="top: 5px; right: 5px;">
+                    {{ unread_notification_count }}
+                </span>
+                {% endif %}
+            </a>
+        </li>
+        <!-- Dropdown Menü (Etkinlikler) -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle mx-2" id="eventsDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="https://png.pngtree.com/png-clipart/20191120/original/pngtree-schedule-glyph-icon-vector-png-image_5058309.jpg" alt="Etkinlikler" style="height: 30px;" class="pe-2" />
+            </a>
+            <div class="dropdown-menu" aria-labelledby="eventsDropdown">
+                <a class="dropdown-item" href="/addevent">Yeni Etkinlik Ekle</a>
+                <a class="dropdown-item" href="/events">Etkinlikleri Görüntüle</a>
+                <a class="dropdown-item" href="/eventadvice">Önerilen Etkinlikler</a>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link mx-2" href="/eventmap">
+                <img src="https://img.favpng.com/5/22/2/google-maps-computer-icons-google-map-maker-symbol-png-favpng-1v3iHMhVJGSUhJtq7a43cnXhP.jpg" alt="Harita" style="height: 30px;" class="pe-2" />
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link mx-2" href="/chats">
+                <img src="https://cdn-icons-png.flaticon.com/512/14/14558.png" alt="Mesajlar" style="height: 30px;" class="pe-2" />
+            </a>
+        </li>
+    </ul>
+    </div>
+
+
+</nav>

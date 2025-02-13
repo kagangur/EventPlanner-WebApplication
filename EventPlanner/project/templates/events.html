@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h3>Katıldığınız Etkinlikler</h3>
+
+    <div class="row">
+        {% for event in events %}
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'eventdetail' event.0 %}" class="card">  <!-- Etkinlik ID'si ile URL bağlantısı oluşturuluyor -->
+                    <img src="{{ event.image.url|default:'https://img.freepik.com/free-photo/abstract-solid-shining-yellow-gradient-studio-wall-room-background_1258-88679.jpg?semt=ais_hybrid' }}" class="card-img-top" alt="{{ event.1 }}">  <!-- Etkinlik adı ve görsel -->
+                    <div class="card-body">
+                        <h5 class="card-title">{{ event.1 }}</h5>  <!-- Etkinlik adı -->
+                        <p class="card-text">Tarih: {{ event.3 }} | Saat: {{ event.4 }}</p>  <!-- Tarih ve Saat -->
+                        <p class="card-text">{{ event.2|slice:":100" }}...</p>  <!-- Etkinlik açıklaması (ilk 100 karakter) -->
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <p>Henüz katıldığınız etkinlik bulunmamaktadır.</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}

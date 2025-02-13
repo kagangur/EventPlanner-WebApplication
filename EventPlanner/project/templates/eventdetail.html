@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container">
+    {% if messages %}
+    <div class="alert alert-info">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h3>{{ event.name }}</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Etkinlik Görseli -->
+            <img src="{{ event.image.url }}" class="img-fluid" alt="{{ event.name }}">
+            <br><br><br>
+
+            <!-- Etkinlik Detayları -->
+            <p><strong>Tarih:</strong> {{ event.date }}</p>
+            <p><strong>Saat:</strong> {{ event.time }}</p>
+            <p><strong>Açıklama:</strong> {{ event.description }}</p>
+            <p><strong>Konum:</strong> {{ event.location }}</p>
+
+            <!-- Rota oluşturma için buton -->
+            <a href="{% url 'route_planner' id=event.id %}" class="btn btn-primary">Rota Oluştur</a>
+        </div>
+
+        <!-- Sağ tarafta harita ve butonlar -->
+        <div class="col-md-6">
+            <div id="map" style="height: 525px;"></div>
+            <br>
+            {% if event.creator == user_id %}
+            <button class="btn btn-warning" onclick="window.location.href='{% url 'update_event' event.id %}'">Etkinliği Güncelle</button>
+            <button class="btn btn-danger" onclick="deleteEvent()">Etkinliği Sil</button>
+            {% endif %}
+
+            {% if event.creator != user_id %}
+            <form method="post" action="{% url 'leave_event' event.id %}">
+                {% csrf_token %}
+                <button class="btn btn-secondary" type="submit">Etkinlikten Ayrıl</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function initMap() {
+        const center = { lat: 39.9334, lng: 32.8597 };  // Default center (Ankara)
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 14,
+            center: center,
+        });
+
+        const geocoder = new google.maps.Geocoder();
+
+        {% if event.location %}
+            geocoder.geocode({ 'address': "{{ event.location }}" }, function(results, status) {
+                if (status === 'OK') {
+                    const eventLocation = results[0].geometry.location;
+                    const marker = new google.maps.Marker({
+                        position: eventLocation,
+                        map: map,
+                        title: "{{ event.name }}"
+                    });
+                    map.setCenter(eventLocation);
+                } else {
+                    alert("Konum bulunamadı: " + status);
+                }
+            });
+        {% else %}
+            const marker = new google.maps.Marker({
+                position: center,
+                map: map,
+                title: "Etkinlik Konumu"
+            });
+        {% endif %}
+    }
+
+    function joinEvent() {
+        alert("Etkinliğe katıldınız!");
+    }
+
+    function deleteEvent() {
+        if (confirm("Bu etkinliği silmek istediğinizden emin misiniz?")) {
+            window.location.href = "{% url 'delete_event' event.id %}";
+        }
+    }
+</script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLDWU7TJfLfTujSZ6bdkTPb9hmcfiRQJg&callback=initMap">
+</script>
+{% endblock %}

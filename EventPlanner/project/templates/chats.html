@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h3>Sohbet Odaları</h3>
+    
+    <div class="row">
+        {% for room in chat_rooms %}
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'chatroom' room.id %}" class="card">
+                    <img src="{{ room.image }}" class="card-img-top" alt="{{ room.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ room.name }}</h5>
+                        <p class="card-text">Son Mesaj: {{ room.last_message }}</p>
+                        <p class="card-text">Saat: {{ room.last_message_time|date:"H:i" }}</p>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <p>Henüz sohbet odası bulunmamaktadır.</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}

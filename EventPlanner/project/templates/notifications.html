@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h2 class="text-center my-4">Bildirimler</h2>
+
+    <div class="list-group">
+        {% if notifications %}
+            {% for notification in notifications %}
+                <div class="list-group-item list-group-item-action mb-2 {% if not notification.is_read %}bg-light{% endif %}">
+                    <h5 class="mb-1">{{ notification.title }}</h5>
+                    <p class="mb-1">{{ notification.message }}</p>
+                    <small class="text-muted">{{ notification.timestamp|date:"d-m-Y H:i" }}</small>
+
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            {% if not notification.is_read %}
+                                <a href="{% url 'mark_notification_as_read' notification.id %}" class="btn btn-primary btn-sm">Okundu Olarak İşaretle</a>
+                            {% endif %}
+                        </div>
+
+                        <!-- Silme Butonu -->
+                        <div>
+                            <a href="{% url 'delete_notification' notification.id %}" class="btn btn-danger btn-sm">Sil</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                Henüz bir bildirim yok.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

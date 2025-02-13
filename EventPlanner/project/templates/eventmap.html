@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="container">
+        <h3>Etkinlikler Haritası</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="map" style="height: 525px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function initMap() {
+        const center = { lat: 39.9334, lng: 32.8597 };
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 6,
+            center: center,
+        });
+
+        const events = {{ events|safe }};
+
+        const geocoder = new google.maps.Geocoder();
+
+        events.forEach(event => {
+            const location = event[2]; // Etkinlik konumu
+            const eventId = event[0]; // Etkinlik ID'si
+
+            geocoder.geocode({ address: location }, function(results, status) {
+                if (status === 'OK') {
+                    const eventLocation = results[0].geometry.location;
+                    const marker = new google.maps.Marker({
+                        position: eventLocation,
+                        map: map,
+                        title: event[1], // Etkinlik adı
+                    });
+
+                    // Marker'a tıklanınca detay sayfasına git
+                    marker.addListener('click', () => {
+                        window.location.href = `/events/basic/${eventId}/`;
+                    });
+                } else {
+                    console.log("Konum bulunamadı: " + status);
+                }
+            });
+        });
+    }
+</script>
+
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLDWU7TJfLfTujSZ6bdkTPb9hmcfiRQJg&callback=initMap">
+    </script>
+{% endblock %}

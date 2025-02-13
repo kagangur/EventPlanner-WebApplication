@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Chat Sayfası</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'chat/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <br><br><br>
+    <style>
+        /* Chat Box Styling */
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+        }
+
+        /* Message Styling */
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            flex-direction: row-reverse;  /* Default to right alignment for sent messages */
+        }
+
+        .message.left {
+            flex-direction: row; /* Align left for other users */
+        }
+
+        .message .profile-pic {
+            margin-right: 10px;
+        }
+
+        .message .profile-pic img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .message-content {
+            max-width: 75%;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .message-sender {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #777;
+            text-align: right;
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+        }
+
+        .message.right .message-content {
+            background-color: #e6f7ff;
+        }
+
+        .message.left .message-content {
+            background-color: #fff3e6;
+        }
+
+        /* Input Box */
+        .input-box {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .input-box input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .input-box button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .input-box button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-toggleable-md navbar-expand-lg fixed-top bg-light navbar-light">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="/">
+          <img id="MDB-logo" src="https://framerusercontent.com/images/NBZqp4vdZ9yMqGqdjznVMjSzrc.png" alt="MDB Logo" draggable="false" height="60" />
+      </a>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav align-items-center mx-auto">
+            <!-- Additional Menu Items -->
+        </div>
+    </nav>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>{{ etkinlik_adi }} Sohbeti</h2>
+        </div>
+
+        <div class="chat-box" id="chatBox">
+            {% for message in messages %}
+                <div class="message {% if message.username == request.user.username %}right{% else %}left{% endif %}">
+                    <div class="profile-pic">
+                        <img src="{% static 'chat/default-profile.jpg' %}" alt="Profile Picture">
+                    </div>
+                    <div class="message-content">
+                        <p class="message-sender">
+                            {{ message.first_name }} {{ message.last_name }} ({{ message.username }})
+                        </p>
+                        <p class="message-text">{{ message.mesaj_metni }}</p>
+                        <p class="message-time">
+                            {{ message.gonderim_zamani|date:"H:i:s d/m/Y" }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <form method="post" action="{% url 'send_message' room.id %}">
+            {% csrf_token %}
+            <div class="input-box">
+                <input type="text" name="message" placeholder="Mesajınızı yazın..." required>
+                <button type="submit">Gönder</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        window.onload = function() {
+            var chatBox = document.getElementById("chatBox");
+            chatBox.scrollTop = chatBox.scrollHeight;  // Sayfa yüklendiğinde en alta kaydırır
+        };
+    </script>
+
+</body>
+</html>

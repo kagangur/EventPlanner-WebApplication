@@ -1,0 +1,124 @@
+/* Genel Sayfa Ayarları */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f2f3f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Chat Sayfası */
+.chat-container {
+    width: 400px;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    overflow: hidden;
+}
+
+/* Başlık */
+.chat-header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.chat-header h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Mesaj Kutusu */
+.chat-box {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding-right: 10px;
+}
+
+.message {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 15px;
+}
+
+.message.left {
+    flex-direction: row;
+}
+
+.message.right {
+    flex-direction: row-reverse;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 10px;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.message-content {
+    max-width: 70%;
+    background-color: #e5e5e5;
+    padding: 4px 6px; /* Yatay ve dikey padding değerlerini küçültün */
+    border-radius: 8px; /* Köşe yarıçapını biraz küçültebilirsiniz */
+    position: relative;
+}
+
+.message-text {
+    margin: 0;
+    color: #333;
+    font-size: 11px; /* Font boyutunu biraz küçülttük */
+}
+
+/* Gönderim butonu ve metin kutusu */
+.input-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-box input {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+    outline: none;
+}
+
+.input-box button {
+    padding: 10px 15px;
+    background-color: #25D366; /* WhatsApp yeşili */
+    border: none;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.input-box button:hover {
+    background-color: #128C7E;
+}
+
+/* Mobil uyumlu tasarım */
+@media screen and (max-width: 480px) {
+    .chat-container {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .message-content {
+        max-width: 90%;
+    }
+}

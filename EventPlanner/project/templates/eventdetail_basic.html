@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container">
+    <h3>{{ event.name }}</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Etkinlik Görseli -->
+            <img src="{{ event.image.url }}" class="img-fluid" alt="{{ event.name }}">
+            <br><br><br>
+
+            <!-- Etkinlik Detayları -->
+            <p><strong>Tarih:</strong> {{ event.date }}</p>
+            <p><strong>Saat:</strong> {{ event.time }}</p>
+            <p><strong>Açıklama:</strong> {{ event.description }}</p>
+            <p><strong>Konum:</strong> {{ event.location }}</p>
+
+            <!-- Kullanıcı durumu -->
+            {% if already_joined %}
+                <div class="alert alert-success">
+                    Bu etkinliğe zaten katıldınız.
+                </div>
+            {% elif date_conflict %}
+                <div class="alert alert-danger">
+                    Aynı tarihte başka bir etkinliğiniz var.
+                </div>
+                <h4>Alternatif Etkinlikler</h4>
+                <ul class="list-group">
+                    {% for event in alternative_events %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ event.url }}" class="text-decoration-none">{{ event.name }}</a>
+                            <span class="badge bg-warning">{{ event.date }} - {{ event.time }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+            <a href="{% url 'join_event' event.id %}" class="btn btn-primary">Katıl</a>
+            {% endif %}
+
+
+
+        </div>
+
+        <!-- Sağ tarafta harita -->
+        <div class="col-md-6">
+            <div id="map" style="height: 525px;"></div>
+                    <!-- Rota oluşturma için buton -->
+            <a href="{% url 'route_planner' id=event.id %}" class="btn btn-primary">Rota Oluştur</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function initMap() {
+        // Varsayılan harita merkezi (Ankara)
+        const center = { lat: 39.9334, lng: 32.8597 };  // Default center (Ankara)
+
+        // Haritayı oluştur
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 14,
+            center: center,
+        });
+
+        // Etkinlik konumunu geocode et
+        const geocoder = new google.maps.Geocoder();
+
+        {% if event.location %}
+            geocoder.geocode({ 'address': "{{ event.location }}" }, function(results, status) {
+                if (status === 'OK') {
+                    const eventLocation = results[0].geometry.location;
+                    const marker = new google.maps.Marker({
+                        position: eventLocation,
+                        map: map,
+                        title: "{{ event.name }}"
+                    });
+                    map.setCenter(eventLocation);  // Etkinliğin konumunu haritanın ortası yap
+                } else {
+                    alert("Konum bulunamadı: " + status);
+                }
+            });
+        {% else %}
+            // Eğer konum bilgisi yoksa, varsayılan merkezi kullan
+            const marker = new google.maps.Marker({
+                position: center,
+                map: map,
+                title: "Etkinlik Konumu"
+            });
+        {% endif %}
+    }
+
+    // Etkinliğe katılma fonksiyonu
+    function joinEvent() {
+        alert("Etkinliğe katıldınız!");
+        // Buraya etkinliğe katılmak için gerekli logic eklenebilir.
+    }
+</script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLDWU7TJfLfTujSZ6bdkTPb9hmcfiRQJg&callback=initMap">
+</script>
+{% endblock %}

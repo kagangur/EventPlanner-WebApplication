@@ -1,0 +1,198 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Etkinlik Önerileri</h2>
+
+    <!-- İlgi alanına göre öneriler -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3>İlgi Alanınıza Uygun Etkinlikler</h3>
+        </div>
+        <div class="card-body">
+            {% if recommendations.by_interest %}
+                <ul class="list-group">
+                    {% for event in recommendations.by_interest %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ base_url }}{{ event.0 }}/" class="text-decoration-none">{{ event.1 }}</a>
+                            <span class="badge bg-info">{{ event.6 }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">İlgi alanınıza uygun etkinlik bulunamadı.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Konuma göre sıralanmış öneriler -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h3>Konumunuza Yakın Etkinlikler</h3>
+        </div>
+        <div class="card-body">
+            {% if recommendations.by_proximity %}
+                <ul class="list-group">
+                    {% for distance, event in recommendations.by_proximity %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ base_url }}{{ event.0 }}/" class="text-decoration-none">{{ event.1 }}</a>
+                            <span class="badge bg-warning">{{ distance|floatformat:2 }} km</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">Konumunuza yakın etkinlik bulunamadı.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- En çok katıldığınız kategoriye göre öneriler -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h3>En Çok Katıldığınız Kategoriye Uygun Etkinlikler</h3>
+        </div>
+        <div class="card-body">
+            {% if recommendations.by_category %}
+                <ul class="list-group">
+                    {% for event in recommendations.by_category %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ base_url }}{{ event.0 }}/" class="text-decoration-none">{{ event.1 }}</a>
+                            <span class="badge bg-secondary">{{ event.6 }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">Bu kategoride etkinlik bulunamadı.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- En iyi eşleşme -->
+    {% if recommendations.best_match %}
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h3>En İyi Önerimiz</h3>
+            </div>
+            <div class="card-body">
+                <p>
+                    <a href="{{ base_url }}{{ recommendations.best_match.0 }}/" class="text-decoration-none text-primary">
+                        {{ recommendations.best_match.1 }}
+                    </a>
+                    <span class="badge bg-success">{{ recommendations.best_match.6 }}</span>
+                    <span class="badge bg-warning">{{ recommendations.best_match.5 }}</span>
+                </p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% block custom_css %}
+<style>
+    /* Genel CSS */
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: #f9fafb; /* Hafif gri arka plan */
+        color: #333; /* Genel metin rengi */
+    }
+
+    h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #495057; /* Koyu gri ton */
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        font-weight: bold;
+        color: #ffffff;
+        border-radius: 8px 8px 0 0;
+        padding: 15px;
+    }
+
+    .card-body {
+        background-color: #ffffff; /* Beyaz arka plan */
+        border: 1px solid #e9ecef; /* Hafif gri kenar */
+        border-radius: 0 0 8px 8px;
+        padding: 1.5rem;
+    }
+
+    .list-group-item {
+        font-size: 1rem;
+        padding: 10px;
+        background-color: #f8f9fa; /* Hafif gri */
+        border: none; /* Daha temiz görünüm */
+        transition: all 0.2s ease;
+    }
+
+    .list-group-item:hover {
+        background-color: #e9ecef; /* Hover efekti için daha koyu bir gri */
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.6rem;
+        border-radius: 5px;
+        color: #ffffff;
+    }
+
+    /* İlgi Alanına Uygun Etkinlikler */
+    .card-header.bg-primary {
+        background-color: #6c63ff; /* Hafif mor */
+    }
+
+    /* Konumunuza Yakın Etkinlikler */
+    .card-header.bg-success {
+        background-color: #4caf50; /* Yumuşak yeşil */
+    }
+
+    /* En Çok Katıldığınız Kategoriye Göre Etkinlikler */
+    .card-header.bg-info {
+        background-color: #03a9f4; /* Hafif mavi */
+    }
+
+    /* En İyi Önerimiz */
+    .card-header.bg-dark {
+        background-color: #ff9800; /* Turuncu */
+        color: #ffffff;
+    }
+
+    .card-body.bg-dark {
+        background-color: #fff7e6; /* Hafif turuncu arka plan */
+    }
+
+    /* Rozet Renkleri */
+    .card-body .badge.bg-info {
+        background-color: #2196f3; /* Canlı mavi */
+    }
+
+    .card-body .badge.bg-warning {
+        background-color: #ff9800; /* Sıcak turuncu */
+    }
+
+    .card-body .badge.bg-secondary {
+        background-color: #9e9e9e; /* Orta gri */
+    }
+
+    .card-body .badge.bg-success {
+        background-color: #8bc34a; /* Açık yeşil */
+    }
+
+    /* Linkler */
+    a.text-decoration-none {
+        color: #007bff; /* Link rengi */
+        transition: color 0.2s ease;
+    }
+
+    a.text-decoration-none:hover {
+        color: #0056b3; /* Daha koyu mavi */
+    }
+</style>
+
+
+{% endblock %}
+{% endblock %}
